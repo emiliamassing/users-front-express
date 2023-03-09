@@ -1,7 +1,17 @@
 const inputUsername = document.querySelector('#username');
 const inputPassword = document.querySelector('#password');
 const loginButton = document.querySelector('#loginButton');
+const messageContainer = document.querySelector('.welcomeMessage');
 
+function printWelcomeMessage() {
+    const headingElement = document.createElement('h3');
+    headingElement.className = 'greeting';
+    headingElement.innerHTML = 'Welcome!';
+
+    messageContainer.appendChild(headingElement);
+};
+
+printWelcomeMessage();
 
 fetch('http://localhost:3000/users')
     .then(res => res.json())
@@ -12,7 +22,9 @@ fetch('http://localhost:3000/users')
 loginButton.addEventListener('click', tryToLogin);
 
 function tryToLogin() {
-    let logInUser = {
+    const headingElement = document.querySelector('.greeting');
+
+    let logInDetails = {
         username: inputUsername.value,
         password: inputPassword.value
     };
@@ -22,16 +34,16 @@ function tryToLogin() {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(logInUser)
+        body: JSON.stringify(logInDetails)
     })
     .then(res => res.json())
     .then(data => {
-        console.log(data)
+        console.log('login', data);  
 
-        if(data.username){
-            console.log('Välkommen');
+        if(data.name){
+            headingElement.innerHTML = `Welcome ${data.name}!`;
         } else {
-            console.log('något gick fel');
-        }
+            headingElement.innerHTML = 'Username or password is incorrect';
+        };
     });
 };
